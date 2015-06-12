@@ -95,7 +95,7 @@ class MediaTools:
         while totalsent < int(filesize):
             if logcount > 10:
                 logcount = 0
-                print '{}/{}'.format(totalsent, int(filesize))
+                print('{}/{}'.format(totalsent, int(filesize)))
             logcount += 1
             ssl_sock.send(stream[:buf])
             stream = stream[buf:]

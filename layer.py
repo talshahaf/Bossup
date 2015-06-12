@@ -159,12 +159,12 @@ class EchoLayer(YowInterfaceLayer):
     #------------------------------------------------------------------------------------------
                 
     def onTextMessage(self, messageProtocolEntity):
-        print 'got from {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getNotify())
+        print('got from {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getNotify()))
         self.reactToMessage(messageProtocolEntity)
         self.ReceiveText(messageProtocolEntity, group = False)
             
     def onGroupTextMessage(self, messageProtocolEntity):
-        print 'got group from {} - {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getParticipant(), messageProtocolEntity.getNotify())
+        print('got group from {} - {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getParticipant(), messageProtocolEntity.getNotify()))
         self.reactToMessage(messageProtocolEntity)
         self.ReceiveText(messageProtocolEntity, group = True)
                                
@@ -178,12 +178,12 @@ class EchoLayer(YowInterfaceLayer):
 
     
     def onGroupMediaMessage(self, messageProtocolEntity):
-        print 'got group media from {} - {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getParticipant(), messageProtocolEntity.getNotify())
+        print('got group media from {} - {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getParticipant(), messageProtocolEntity.getNotify()))
         self.reactToMessage(messageProtocolEntity)
         self.ReceiveMedia(messageProtocolEntity, group = True)
         
     def onMediaMessage(self, messageProtocolEntity):
-        print 'got media from {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getNotify())
+        print('got media from {} ({})'.format(messageProtocolEntity.getFrom(), messageProtocolEntity.getNotify()))
         self.reactToMessage(messageProtocolEntity)
         self.ReceiveMedia(messageProtocolEntity, group = False)
                                     
@@ -335,8 +335,8 @@ class EchoLayer(YowInterfaceLayer):
             try:
                 ev.args['runnable'](*ev.args['args'], **ev.args['kwargs'])
             except Exception:
-                print 'error at event runnable'
-                print traceback.format_exc()
+                print('error at event runnable')
+                print(traceback.format_exc())
             return
         for entity in self.entities:
             entity.OnEvent(ev.getName())
@@ -395,21 +395,21 @@ class EchoLayer(YowInterfaceLayer):
             if arg['cb']:
                 arg['cb'](gid, arg['arg'])
         else:
-            print 'error creating group'
+            print('error creating group')
             
     def onParticipantsAddSuccess(self, request, response, arg):
         if isinstance(response, SuccessAddParticipantsIqProtocolEntity):
             if arg['cb']:
                 arg['cb'](response.groupId, response.participantList, arg['arg'])
         else:
-            print 'error adding to group'
+            print('error adding to group')
     
     def onParticipantsRemoveSuccess(self, request, response, arg):
         if isinstance(response, SuccessRemoveParticipantsIqProtocolEntity):
             if arg['cb']:
                 arg['cb'](response.groupId, response.participantList, arg['arg'])
         else:
-            print 'error removing from group'
+            print('error removing from group')
             
     def onListGroups(self, request, response, arg):
         if isinstance(response, ListGroupsResultIqProtocolEntity):
@@ -425,7 +425,7 @@ class EchoLayer(YowInterfaceLayer):
             if arg['cb']:
                 arg['cb'](grps, arg['arg'])
         else:
-            print 'error listing groups'
+            print('error listing groups')
         
     def onGroupInfo(self, request, response, arg):
         if isinstance(response, InfoGroupsResultIqProtocolEntity):
@@ -442,7 +442,7 @@ class EchoLayer(YowInterfaceLayer):
             if arg['cb']:
                 arg['cb'](groupInfo, arg['arg'])                      
         else:
-            print 'error infoing group'
+            print('error infoing group')
     
     def onMakeAdminSuccess(self, request, response, arg):
         if arg['cb']:
@@ -482,7 +482,7 @@ class EchoLayer(YowInterfaceLayer):
             if arg['cb']:
                 arg['cb'](response.getPictureData(), arg['arg'])
         else:
-            print 'error getting image'
+            print('error getting image')
             
     def SetProfileImage(self, jid, img):
         entity = SetPictureIqProtocolEntity(jid, MediaTools.resizeImage(img, 96, 96), MediaTools.resizeImage(img, 640, 640))

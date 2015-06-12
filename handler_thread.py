@@ -24,8 +24,8 @@ class HandlerThread(threading.Thread):
             try:
                 i[0](*i[1], **i[2])
             except Exception:
-                print 'exception in runnable'
-                print traceback.format_exc()
+                print('exception in runnable')
+                print(traceback.format_exc())
                 
                 
                 

@@ -66,16 +66,16 @@ class YowsupEchoStack(object):
 def main_server(creds, entities):
     logging.basicConfig()
     while True:
-        print 'starting: {}'.format(datetime.datetime.now())
+        print('starting: {}'.format(datetime.datetime.now()))
         try:
             stack = YowsupEchoStack(creds, entities)
             stack.start()
         except Exception:
-            print traceback.format_exc('')
+            print(traceback.format_exc(''))
         for destructor in EchoLayer.destructors:
             try:
                 destructor()
             except Exception:
-                print traceback.format_exc('while destructing')
+                print(traceback.format_exc('while destructing'))
         EchoLayer.destructors = []
         time.sleep(5)
