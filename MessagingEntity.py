@@ -22,7 +22,7 @@ class GroupInfo(object):
                 setattr(self, k, v)
 
 class Handler:
-    def __init__(self, layer, entity):
+    def __init__(self, layer, entity, arg = None):
         self.entity = entity
         self.layer = layer
 
