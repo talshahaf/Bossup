@@ -24,10 +24,7 @@ import MessagingEntity
 from MediaTools import *
 from handler_thread import *
 
-from protocolentities.notification_groups_added import *
-from protocolentities.notification_groups_removed import *
 from protocolentities.notification_groups_promoted import *
-from protocolentities.iq_groups_participants_promote import *
 
 logger = logging.getLogger(__name__)
         
@@ -84,8 +81,8 @@ class EchoLayer(YowInterfaceLayer):
             
             dct = {
                         CreateGroupsNotificationProtocolEntity: None,
-                        AddedGroupNotificationProtocolEntity: self.OnGroupParticipantAdded,
-                        RemovedGroupNotificationProtocolEntity: self.OnGroupParticipantRemoved,
+                        AddGroupsNotificationProtocolEntity: self.OnGroupParticipantAdded,
+                        RemoveGroupsNotificationProtocolEntity: self.OnGroupParticipantRemoved,
                         PromotedGroupNotificationProtocolEntity: self.OnGroupParticipantPromoted,
                   }
                   
@@ -93,8 +90,8 @@ class EchoLayer(YowInterfaceLayer):
                 self.OnGroupSubjectChanged(notificationProtocolEntity.getFrom(), notificationProtocolEntity.getSubject())
             elif notificationProtocolEntity.__class__ in dct.keys():
                 participants = {}
-                for k, v in notificationProtocolEntity.getParticipants().items():
-                    participants[k] = MessagingEntity.Participant(k, v == InfoGroupsResultIqProtocolEntity.TYPE_PARTICIPANT_ADMIN)
+                for k in notificationProtocolEntity.getParticipants():
+                    participants[k] = MessagingEntity.Participant(k, False)
                     
                 if isinstance(notificationProtocolEntity, CreateGroupsNotificationProtocolEntity):
                     gid = notificationProtocolEntity.getGroupId()
