@@ -113,10 +113,25 @@ class MyGroup(MessagingEntity.Entity):
         self.SendAudio(jid, name, fileName, fileData, cb = None, arg = None)
         
         #####video upload is not yet supported#####
+ 
+class FaceGroup(MessagingEntity.Entity):
+    FACE_GID = 'yyy@g.us'
+    FACE_NAME = 'face swapper'
     
+    def __init__(self):
+        super(FaceGroup, self).__init__()
+        self.handlerClass = MessagingEntity.SpecificHandler
+        self.handlerArg = FaceGroup.FACE_GID
+        
+    def ReceiveGroupMedia(self, gid, timestamp, from_id, from_name, media):
+        newimg = doFaces(gid, media.data)
+        if newimg:
+            self.SendImage(FaceGroup.FACE_GID, FaceGroup.FACE_NAME, '{}.jpg'.format(int(time.time())), newimg, caption = '')
+            
+            
 #    (phone,password)
 CREDS = ("", "")
 
 if __name__ == '__main__':
                             #list of entities (can overlap)
-    stack.main_server(CREDS, [MyGroup])
+    stack.main_server(CREDS, [MyGroup, FaceGroup])
