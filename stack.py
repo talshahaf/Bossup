@@ -33,6 +33,8 @@ class YowsupEchoStack(object):
         logging.getLogger("yowsup.stacks.yowstack").addHandler(logger)
         
         env.CURRENT_ENV = env.AndroidYowsupEnv()
+        #env.CURRENT_ENV = env.S40YowsupEnv()
+        
         layers = (
             EchoLayer, 
             
@@ -66,10 +68,14 @@ class YowsupEchoStack(object):
 def main_server(creds, entities):
     logging.basicConfig()
     while True:
+        wait = True
         print('starting: {}'.format(datetime.datetime.now()))
         try:
             stack = YowsupEchoStack(creds, entities)
             stack.start()
+        except AssertionError:
+            print(traceback.format_exc(''))
+            wait = False
         except Exception:
             print(traceback.format_exc(''))
         for destructor in EchoLayer.destructors:
@@ -78,4 +84,5 @@ def main_server(creds, entities):
             except Exception:
                 print(traceback.format_exc('while destructing'))
         EchoLayer.destructors = []
-        time.sleep(5)
+        if wait:
+            time.sleep(5)

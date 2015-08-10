@@ -139,13 +139,11 @@ class EchoLayer(YowInterfaceLayer):
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, protocolEntity):
         #if protocolEntity.type == 'retry':
-        #    ack = OutgoingReceiptProtocolEntity(protocolEntity.getId(), to = protocolEntity.getFrom()) #type = 'receipt'
-        #    self.toLower(ack)
-        #else:
-        ack = OutgoingAckProtocolEntity(protocolEntity.getId(), "receipt", protocolEntity.getType(), protocolEntity.getFrom())
-        #ack2 = OutgoingAckProtocolEntity(protocolEntity.getId(), "receipt", 'read', protocolEntity.getFrom())
-        self.toLower(ack)
-        #self.toLower(ack2)
+            #if protocolEntity.getId() in self.pending_sends:
+            #    retry = self.pending_sends[protocolEntity.getId()]
+            #    self.toLower(retry)
+        #ack = OutgoingAckProtocolEntity(protocolEntity.getId(), "receipt", protocolEntity.getType(), protocolEntity.getFrom())
+        self.toLower(protocolEntity.ack())
         
     @ProtocolEntityCallback("ack")
     def onAck(self, protocolEntity):
@@ -226,18 +224,10 @@ class EchoLayer(YowInterfaceLayer):
         self.markRead(messageProtocolEntity)
 
     def markReceived(self, messageProtocolEntity):
-        if messageProtocolEntity.isGroupMessage():
-            receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom(), participant=messageProtocolEntity.getParticipant())
-        else:
-            receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom())
-        self.toLower(receipt)
+        self.toLower(messageProtocolEntity.ack())
         
     def markRead(self, messageProtocolEntity):
-        if messageProtocolEntity.isGroupMessage():
-            receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom(), participant=messageProtocolEntity.getParticipant(), read=True)#type='read')
-        else:
-            receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom(), read=True)#type='read')
-        self.toLower(receipt)
+        self.toLower(messageProtocolEntity.ack(True))
         
     def markOnline(self):
         entity = AvailablePresenceProtocolEntity()
@@ -257,6 +247,8 @@ class EchoLayer(YowInterfaceLayer):
         return self.self_id
         
     def SendVCard(self, gid, name, number, imgdata_gif = None):
+        if not number:
+            number = '0'
         mabye_gif = 'PHOTO;ENCODING=BASE64;TYPE=GIF:{gifdata}\r\n'.format(gifdata=base64.b64encode(imgdata_gif)) if imgdata_gif else ''
         vcardTemplate = '''BEGIN:VCARD\r\nVERSION:3.0\r\nN:;{name};;;\r\nFN:{name}\r\nitem1.TEL:{number}\r\nitem1.X-ABLabel:Mobile\r\n{mabye_gif}END:VCARD'''
         outVcard = VCardMediaMessageProtocolEntity(name, vcardTemplate.format(name = name, number = self.formatNumber(number), mabye_gif=mabye_gif), to = gid)

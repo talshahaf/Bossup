@@ -5,7 +5,7 @@ class HandlerThread(threading.Thread):
     def __init__(self):
         super(HandlerThread, self).__init__()
         self.lck = threading.Condition()
-        self.queue = deque(maxlen = 1000)
+        self.queue = deque(maxlen = 10)
         self.shouldStop = True
     
     def run(self):
